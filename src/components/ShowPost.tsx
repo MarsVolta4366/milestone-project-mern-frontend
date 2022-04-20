@@ -6,10 +6,10 @@ import { FiEdit } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
 import "./showpost.css"
 
-export default function ShowPost(props) {
+export default function ShowPost(props: { deleteComment: (arg0: string) => void; deletePost: (arg0: string) => void; }) {
   const { postId } = useParams()
   let [author, setAuthor] = useState("")
-  let [data, setData] = useState({})
+  let [data, setData] = useState({ post_title: "", post_author: "", post_content: "" })
   let [postDate, setPostDate] = useState('')
   let [date, setDate] = useState(Date.now())
   let [content, setContent] = useState({})
@@ -20,7 +20,7 @@ export default function ShowPost(props) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `https://milestone-project-mern-backend.herokuapp.com/posts/${postId}`
+        `http://localhost:3000/posts/${postId}`
       )
       const resData = await response.json()
       setData(resData)
@@ -30,7 +30,7 @@ export default function ShowPost(props) {
     fetchData()
   }, [postId])
 
-  const submitComment = async (e) => {
+  const submitComment = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     const comment = {
       comment_author: author,
@@ -39,7 +39,7 @@ export default function ShowPost(props) {
       post: postId,
     }
     await fetch(
-      `https://milestone-project-mern-backend.herokuapp.com/comments`,
+      `http://localhost:3000/comments`,
       {
         method: "POST",
         mode: "cors",
@@ -49,12 +49,12 @@ export default function ShowPost(props) {
         body: JSON.stringify(comment),
       }
     )
-    window.location = `/postShow/${postId}`
+    window.location.href = `/postShow/${postId}`
   }
 
-  let commentsDisplay = <p>no comments yet</p>
+  let commentsDisplay: any = <p>no comments yet</p>
   if (comments) {
-    commentsDisplay = comments.map((comment, index) => {
+    commentsDisplay = comments.map((comment: any, index) => {
 
       let commentDate = dateFormat(comment.comment_date, "mmmm dS, yyyy")
 
@@ -86,9 +86,9 @@ export default function ShowPost(props) {
   return (
     <div className='showPostContainer'>
       <div className='showPost'>
-        <center>
+        <div>
           <h1 className='postTitle'>{data.post_title}</h1>
-        </center>
+        </div>
         <div className='titleBtn'>
           <div className='authorFormat'>
             <h1 className='postAuthor'>{data.post_author}</h1>
@@ -98,7 +98,7 @@ export default function ShowPost(props) {
               className='button'
               variant='primary'
               size='sm'
-              onClick={() => props.deletePost(postId)}
+              onClick={() => props.deletePost(postId as string)}
             >
               <BsTrash />
             </Button>
@@ -133,7 +133,6 @@ export default function ShowPost(props) {
                 controlId='floatingInput'
                 label="Today's Date"
                 className='mb-3 showFormSpacingRight'
-                size='sm'
               >
                 <Form.Control
                   required

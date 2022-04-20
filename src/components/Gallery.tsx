@@ -1,16 +1,16 @@
 import React from "react";
-import GalleryItem from "./GalleryItem.js";
+import GalleryItem from "./GalleryItem";
 import { Link } from "react-router-dom";
 import { TiArrowRightThick } from "react-icons/ti"
 
-const Gallery = (props) => {
+const Gallery = (props: { data: Iterable<unknown> }) => {
     let cards = Array.from(props.data);
 
-    let cardsList = []
+    let cardsList: Iterable<unknown> = []
 
     if (cards) {
-        cardsList = cards.map((card, index) => {
-            return <GalleryItem data={card} key={index} cardId={card.id} />;
+        cardsList = cards.map((card: any, index) => {
+            return <GalleryItem data={card} key={index} cardId={card.id as string} />;
         })
     }
 

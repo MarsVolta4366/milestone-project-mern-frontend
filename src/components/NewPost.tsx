@@ -13,7 +13,7 @@ const NewPost = () => {
 
     const dateFormatted = dateFormat(date, "yyyy-mm-dd")
 
-    const submitPost = async (e) => {
+    const submitPost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const post = {
             post_author: author,
@@ -22,7 +22,7 @@ const NewPost = () => {
             post_content: content
         }
 
-        await fetch("https://milestone-project-mern-backend.herokuapp.com/posts", {
+        await fetch("http://localhost:3000/posts", {
             method: "POST",
             mode: 'cors',
             headers: {
@@ -30,7 +30,7 @@ const NewPost = () => {
             },
             body: JSON.stringify(post)
         })
-        window.location = "/"
+        window.location.href = "/"
     }
 
     return (
@@ -53,7 +53,6 @@ const NewPost = () => {
                             controlId="floatingInput"
                             label="Today's Date"
                             className="mb-3 formSpacingRight"
-                            size="md"
                         >
                             <Form.Control required type="date" defaultValue={dateFormatted} disabled />
                         </FloatingLabel>

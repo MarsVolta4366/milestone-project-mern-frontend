@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useEffect } from "react"
 import { FloatingLabel, Form, Button } from "react-bootstrap"
-import dateFormat from "dateformat"
+import dateFormat, { DateFormatI18n } from "dateformat"
+import React from "react"
 
 const EditPost = () => {
 
@@ -11,14 +12,14 @@ const EditPost = () => {
     // Post values
     let [author, setAuthor] = useState("")
     let [title, setTitle] = useState("")
-    let [date, setDate] = useState("")
+    let [date, setDate] = useState(Date.now())
     let [content, setContent] = useState("")
 
     const dateFormatted = dateFormat(date, "yyyy-mm-dd")
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`https://milestone-project-mern-backend.herokuapp.com/posts/${postId}`)
+            const response = await fetch(`http://localhost:3000/posts/${postId}`)
             const resData = await response.json()
 
             // Set post values
@@ -30,7 +31,7 @@ const EditPost = () => {
         fetchData()
     }, [postId])
 
-    const submitUpdate = async (e) => {
+    const submitUpdate = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const post = {
             post_author: author,
@@ -39,14 +40,14 @@ const EditPost = () => {
             post_content: content
         }
 
-        await fetch(`https://milestone-project-mern-backend.herokuapp.com/posts/${postId}`, {
+        await fetch(`http://localhost:3000/posts/${postId}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(post)
         })
-        window.location = "/"
+        window.location.href = "/"
     }
 
     return (
@@ -68,9 +69,8 @@ const EditPost = () => {
                             controlId="floatingInput"
                             label="Today's Date"
                             className="mb-3 formSpacingRight"
-                            size="md"
                         >
-                            <Form.Control required type="date" onChange={(e) => setDate(e.target.value)} defaultValue={dateFormatted} disabled />
+                            <Form.Control required type="date" onChange={(e) => setDate(e.target.value as any)} defaultValue={dateFormatted} disabled />
                         </FloatingLabel>
                     </div>
                     <FloatingLabel

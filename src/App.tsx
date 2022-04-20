@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -14,26 +15,26 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`https://milestone-project-mern-backend.herokuapp.com/posts`)
+      const response = await fetch(`http://localhost:3000/posts`)
       const resData = await response.json()
       setData(resData)
     }
     fetchData()
   }, [])
 
-  const deletePost = async (postId) => {
-    await fetch(`https://milestone-project-mern-backend.herokuapp.com/posts/${postId}`, {
+  const deletePost = async (postId: string): Promise<void> => {
+    await fetch(`http://localhost:3000/posts/${postId}`, {
       method: "DELETE",
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
       }
     })
-    window.location = "/"
+    window.location.href = "/"
   }
 
-  const deleteComment = async (commentId) => {
-    await fetch(`https://milestone-project-mern-backend.herokuapp.com/comments/${commentId}`, {
+  const deleteComment = async (commentId: string): Promise<void> => {
+    await fetch(`http://localhost:3000/comments/${commentId}`, {
       method: "DELETE",
       mode: 'cors',
       headers: {
@@ -49,7 +50,7 @@ function App() {
         <BlogNavBar />
         <Routes>
           <Route path="/" element={
-            <Gallery data={data} />
+            <Gallery data={data as Iterable<unknown>} />
           } />
           {/* NEW POST */}
           <Route path="/newPost" element={
@@ -61,7 +62,7 @@ function App() {
           } />
           {/* POST SHOW PAGE */}
           <Route path="/postShow/:postId" element={
-            <ShowPost data={data} deletePost={deletePost} deleteComment={deleteComment} />
+            <ShowPost deletePost={deletePost} deleteComment={deleteComment} />
           } />
         </Routes>
         <Footer />
